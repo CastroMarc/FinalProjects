@@ -14,13 +14,13 @@ import javax.swing.JTable;
 import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
+
+
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 import javax.swing.JTextField;
-import javax.swing.JTextArea;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 
@@ -35,8 +35,18 @@ public class Applicant_Process {
 	public JLayeredPane layeredPane;
 	private JTable App_table;
     private DefaultTableModel model;
-    private JTextField searchField;
+    private DefaultTableModel model2;
+
     
+    //
+    private JTextField searchField;
+    private TableRowSorter<DefaultTableModel> sorter;
+    protected Executive_Dash ExecutiveDash;
+    
+    //
+    private static final String FILE_PATH = "/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt";
+    private JTable table;
+  
 	/**
 	 * Launch the application.
 	 */
@@ -44,8 +54,8 @@ public class Applicant_Process {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Applicant_Process window = new Applicant_Process();
-					window.ApplicantProcess.setVisible(true);
+					 Applicant_Process window = new Applicant_Process();
+	                    window.ApplicantProcess.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -55,10 +65,10 @@ public class Applicant_Process {
 	
 	//METHODS ====================================================================================
 
-	//Loads Data from txt file
+	//Loads Data from txt file to Available Positions Table
     private void loadDataFromFile() {
         try {
-            File file = new File("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt");
+            File file = new File(FILE_PATH);
             if (file.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
@@ -73,6 +83,49 @@ public class Applicant_Process {
         }
     }
     
+    //Loads data for Search 
+    private void loadDataFromFile2() {
+        try {
+            File file = new File(FILE_PATH);
+            if (file.exists()) {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] data = line.split(",");
+                    if (data.length > 0) {
+                        model2.addRow(data);
+                    }
+                }
+                reader.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<String[]> getDataFromModel() {
+        List<String[]> data = new ArrayList<>();
+        for (int i = 0; i < model2.getRowCount(); i++) {
+            String[] rowData = new String[model2.getColumnCount()];
+            for (int j = 0; j < model2.getColumnCount(); j++) {
+                rowData[j] = (String) model2.getValueAt(i, j);
+            }
+            data.add(rowData);
+        }
+        return data;
+    }
+
+    
+    private void applyRowFilter(String searchQuery) {
+        RowFilter<DefaultTableModel, Object> rf = null;
+        try {
+            rf = RowFilter.regexFilter(searchQuery, 0);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            return;
+        }
+        sorter.setRowFilter(rf);
+    }
+      
    // ====================================================================================
     
 	//Panel Switch
@@ -91,6 +144,12 @@ public class Applicant_Process {
 	public Applicant_Process() {
 		initialize();
         loadDataFromFile();
+        
+        //NEW
+        loadDataFromFile2();
+        getDataFromModel();
+        ExecutiveDash = new Executive_Dash();
+       
 	}
     public JTable getTable() {
         return App_table;
@@ -141,6 +200,7 @@ public class Applicant_Process {
 	        model.setColumnIdentifiers(column);
 		scrollPane.setViewportView(App_table);
 		
+		
 		//PANEL 2 ====================================================================================
 
 		//APPLY TO DESIRED POSITION
@@ -148,46 +208,73 @@ public class Applicant_Process {
 		layeredPane.add(panel2, "name_55815229348417");
 		panel2.setLayout(null);
 		
-		JLabel lblNewLabel_1 = new JLabel("Panel2");
-		lblNewLabel_1.setBounds(378, 5, 41, 16);
-		panel2.add(lblNewLabel_1);
-		
 		//Search Box
 		searchField = new JTextField();
 		searchField.setBounds(33, 65, 335, 46);
 		panel2.add(searchField);
 		searchField.setColumns(10);
 		
-		//Search Button
+		//SEARCH Button
 		JButton btn_Search = new JButton("Search");
 		btn_Search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+                String searchQuery = searchField.getText().trim();				
+                if (searchQuery.isEmpty()) {
+                    JOptionPane.showMessageDialog(ApplicantProcess, "Please enter a position code to search.", "Empty Search", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    applyRowFilter(searchQuery);
+                }
 	
 			}
 		});
 		btn_Search.setBounds(396, 75, 117, 29);
 		panel2.add(btn_Search);
-		
-		
+	    
 		//Search Table
-		JScrollPane scrollPane_1 = new JScrollPane();
-		
-		scrollPane_1.setBounds(33, 123, 335, 180);
-		panel2.add(scrollPane_1);
-		        
-        //Apply Button
+        JScrollPane scrollPane_1 = new JScrollPane();
+        scrollPane_1.setBounds(33, 138, 335, 154);
+        panel2.add(scrollPane_1);
+        
+        table = new JTable();
+        scrollPane_1.setViewportView(table);
+        model2 = new DefaultTableModel();
+        table.setModel(model2);
+        table.setEnabled(true);
+        table.setFocusable(false);
+        table.setRowSelectionAllowed(true);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
+        table.setDefaultEditor(Object.class, null);
+        Object[] column1 = { "Position Code" };
+        model2.setColumnIdentifiers(column1);
+        
+        sorter = new TableRowSorter<>(model2);
+        table.setRowSorter(sorter);
+
+	        
+        //APPLY Button
         JButton btn_Apply = new JButton("Apply");
         btn_Apply.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
-
-             
+ 
+        	 int selectedRow = table.getSelectedRow();
+        	 if (selectedRow == -1) {
+        		 JOptionPane.showMessageDialog(ApplicantProcess, "Please select a position code to apply.", "No Selection", JOptionPane.WARNING_MESSAGE);
+              } else {
+        		 String positionCode = (String) table.getValueAt(selectedRow, 0);
+        		 ExecutiveDash.incrementApplicants(positionCode);
+        		 ExecutiveDash.saveDataToFile();
+        		     JOptionPane.showMessageDialog(ApplicantProcess, "You have successfully applied for position code: " + positionCode, "Application Submitted", JOptionPane.INFORMATION_MESSAGE);
+        		 }
+      
         	}
         });
         btn_Apply.setBounds(138, 327, 117, 29);
         panel2.add(btn_Apply);
-	  
+        
+      
 		//PANEL 3 ====================================================================================
 
 		//VIEW APLIED POSITION
@@ -264,7 +351,7 @@ public class Applicant_Process {
 		JLabel ApplicantProcess_BG = new JLabel("");
 		ApplicantProcess_BG.setIcon(new ImageIcon("/Users/luiz/Downloads/APPLICANT PROCESS (1).png"));
 		ApplicantProcess_BG.setBounds(0, 0, 1026, 617);
-		ApplicantProcess.getContentPane().add(ApplicantProcess_BG);	
+		ApplicantProcess.getContentPane().add(ApplicantProcess_BG);		
 		
 	}
 }
