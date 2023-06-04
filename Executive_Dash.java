@@ -1,40 +1,31 @@
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.Checkbox;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JToggleButton;
-import javax.swing.JPasswordField;
-import javax.swing.JCheckBox;
-import java.awt.Font;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
 
-public class Applicant_Registration extends JFrame {
 
-	private JPanel Register;
-	private JTextField Name;
-	private JTextField User;
-	private JTextField Email;
-	private JTextField Phone;
-	private JButton btn_Clear;
-	private JToggleButton Show_Hide;
-	private JPasswordField Pass;
-	private JCheckBox ShowHidePass;
-	
+public class Executive_Dash {
+
+	public JFrame ExecutiveDash;
+	private JTable dash_table;
+    private DefaultTableModel model;
+
+
 	/**
 	 * Launch the application.
 	 */
@@ -42,8 +33,8 @@ public class Applicant_Registration extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Applicant_Registration frame = new Applicant_Registration();
-					frame.setVisible(true);
+					Executive_Dash window = new Executive_Dash();
+					window.ExecutiveDash.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -51,238 +42,113 @@ public class Applicant_Registration extends JFrame {
 		});
 	}
 	
-	private void registerAccount(String name, String username, String password, String email, String phone) {
-	 
-	    try {
-	        BufferedWriter writer = new BufferedWriter(new FileWriter("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Registered_Accounts.txt", true));
-	        writer.write( name  + ","  +  username + "," +  password + ","  + email + ","  + phone);
-	        writer.newLine();
-	        writer.close();
+	
+	//METHODS ====================================================================================
 
-	        JOptionPane.showMessageDialog(null, "Successfully Registered");
-	    } catch (IOException ex) {
-	        JOptionPane.showMessageDialog(null, "Error occurred while saving the account details");
-	        ex.printStackTrace();
-	    }
+	//Loads data from the txt file to Dashboard table
+    private void loadDataFromFile() {
+        try {
+            File file = new File("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt");
+            if (file.exists()) {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    model.addRow(data);
+                }
+                br.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+   // ====================================================================================
+    
+	/**
+	 * Create the application.
+	 */
+	public Executive_Dash() {
+		initialize();
+        loadDataFromFile();
 	}
 	
+    public JTable getTable() {
+        return dash_table;
+    }
+ 
 
 	/**
-	 * Create the frame.
+	 * Initialize the contents of the frame.
 	 */
-	public Applicant_Registration() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1026, 645);
-		Register = new JPanel();
-		Register.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(Register);
-		setLocationRelativeTo(null);
-		Register.setLayout(null);
+	private void initialize() {
+		ExecutiveDash = new JFrame();
+		ExecutiveDash.setBounds(100, 100, 1026, 645);
+		ExecutiveDash.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ExecutiveDash.setLocationRelativeTo(null);
+		ExecutiveDash.getContentPane().setLayout(null);
 		
-		//TEXT FIELDS ====================================================================================
-
-		//Name (ONLY ACCEPTS ALPHABETICAL CHARACTERS
-		Name = new JTextField();
-		Name.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				
-				char c = e.getKeyChar();
-				
-				if(Character.isLetter(c) || Character.isWhitespace(c) || Character.isISOControl(c)) {
-					
-					Name.setEditable(true);
-					
-				} else {
-					
-					Name.setEditable(false);
-
-
-				}							
-			}
-		});
-		Name.setBounds(353, 140, 313, 44);
-		Register.add(Name);
-		Name.setColumns(10);
+        model = new DefaultTableModel();
 		
-		//User Name
-		User = new JTextField();
-		User.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				
-				char c = e.getKeyChar();			
-				
-				if(Character.isLetter(c) || Character.isISOControl(c) || Character.isDigit(c)) {
-					
-					User.setEditable(true);
-					
-				} else {
-					
-					User.setEditable(false);
-
-				}
-			}
-		});
-		User.setColumns(10);
-		User.setBounds(353, 196, 313, 44);
-		Register.add(User);
+        //Added Positions
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(37, 197, 439, 386);
+		ExecutiveDash.getContentPane().add(scrollPane);
+	
+		dash_table = new JTable();
+		 scrollPane.setViewportView(dash_table);
+		 dash_table.setModel(model);
+		 dash_table.setEnabled(false);
+		 dash_table.setFocusable(false);
+		 dash_table.setRowSelectionAllowed(false);
+		 dash_table.getTableHeader().setReorderingAllowed(false);
+		 dash_table.getTableHeader().setResizingAllowed(false);
+	        Object[] column = { "Position Code", "Job Title", "Responsibilities", "Salary" };
+	        model.setColumnIdentifiers(column);
+	        final Object[] row = new Object[4];
+	        model.setColumnIdentifiers(column);
+		scrollPane.setViewportView(dash_table);
 		
-		//Show and hide Password
-		ShowHidePass = new JCheckBox("Show Password");
-		ShowHidePass.addActionListener(new ActionListener() {
+		
+		//BUTTONS ====================================================================================
+
+		//Job Posting Button
+		JButton btn_JobPosting = new JButton("");
+		btn_JobPosting.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(ShowHidePass.isSelected()) {
-					
-					Pass.setEchoChar((char)0);
-					
-				} else {
-					
-					Pass.setEchoChar('•');
-					
-				}
+				
+				Job_Posting JobPosting = new Job_Posting(dash_table,getTable());
+				JobPosting.JobPosting.setVisible(true);
+				ExecutiveDash.dispose();
+				
 			}
 		});
-		ShowHidePass.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		ShowHidePass.setBounds(353, 299, 116, 23);
-		Register.add(ShowHidePass);
+		btn_JobPosting.setIcon(new ImageIcon("/Users/luiz/Downloads/JOB POSTING .png"));
+		btn_JobPosting.setBackground(new Color(11, 20, 10));
+		btn_JobPosting.setBounds(754, 67, 116, 40);
+		ExecutiveDash.getContentPane().add(btn_JobPosting);
 		
-		//Password
-		Pass = new JPasswordField();
-		Pass.setBounds(353, 258, 313, 44);
-		Register.add(Pass);
+		//Log Out Button
+		JButton btn_LogOut = new JButton("");
+		btn_LogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Admin_Log AdminLog = new Admin_Log();
+				AdminLog.setVisible(true);
+				ExecutiveDash.dispose();
+				
+			}
+		});
+		btn_LogOut.setIcon(new ImageIcon("/Users/luiz/Downloads/LOGOUT (1).png"));
+		btn_LogOut.setBounds(882, 67, 116, 40);
+		ExecutiveDash.getContentPane().add(btn_LogOut);
 			
-		//Email
-		Email = new JTextField();
-		Email.setColumns(10);
-		Email.setBounds(353, 336, 313, 44);
-		Register.add(Email);
-		
-		//Phone Number (ONLY ACCEPTS 11 DIGITS)
-		Phone = new JTextField();
-		Phone.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				
-				//get JTextField String
-				String PhoneNum = Phone.getText();
+		//BACKGROUND====================================================================================
 
-				//get length of string
-				int length = PhoneNum.length();
-				
-				char c = e.getKeyChar();
-				
-				//check for numbers 0-9
-				if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9') {
-					
-					if(length<11) {
-						//Editable 
-						Phone.setEditable(true);
-					
-					} else {
-						//Not editable if lenghth is more than 11
-						Phone.setEditable(false);
-						JOptionPane.showMessageDialog(null,"Only Input 11 Digits");
-
-					}
-					
-				} else if (e.getExtendedKeyCode()== KeyEvent.VK_BACK_SPACE || e.getExtendedKeyCode()== KeyEvent.VK_DELETE) {
-					
-					Phone.setEditable(true);
-					
-				} else {
-					
-					Phone.setEditable(false);
-					JOptionPane.showMessageDialog(null,"Only Input Numbers from 0 to 9");
-
-
-				}						
-			}
-			
-		});
-		Phone.setColumns(10);
-		Phone.setBounds(353, 392, 313, 44);
-		Register.add(Phone);
-		
-		
-		//BUTTON====================================================================================
-
-		//Register Button
-		JButton btn_Submit = new JButton("");
-		btn_Submit.setIcon(new ImageIcon("/Users/luiz/Downloads/SUBMIT (1).png"));
-		btn_Submit.addActionListener(new ActionListener() {
-			@SuppressWarnings("deprecation")
-			public void actionPerformed(ActionEvent e) {
-				
-		        if (!Name.getText().equals("") && !User.getText().equals("") && !Pass.getPassword().equals("") && !Email.getText().equals("") && !Phone.getText().equals("")) {
-		            
-		        	//Register the account and save details to a text file
-		        	String name = Name.getText();
-		    	    String username = User.getText();
-		    	    String password = Pass.getText();
-		    	    String email = Email.getText();
-		    	    String phone = Phone.getText();
-		    	    
-		        	registerAccount(name, username, password, email, phone);
-		        	
-					Name.setText("");
-					User.setText("");
-					Pass.setText("");
-					Email.setText("");
-					Phone.setText("");
-		        	
-		        } else {
-		        	
-		            JOptionPane.showMessageDialog(null, "Fill out all the fields and try again");	  
-		        }
-				
-			}
-		});
-		btn_Submit.setBounds(550, 464, 116, 40);
-		Register.add(btn_Submit);
-		
-		//Clear Button
-		btn_Clear = new JButton("");
-		btn_Clear.setIcon(new ImageIcon("/Users/luiz/Downloads/CLEAR (1).png"));
-		btn_Clear.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				Name.setText("");
-				User.setText("");
-				Pass.setText("");
-				Email.setText("");
-				Phone.setText("");
-				
-			}
-		});
-		btn_Clear.setBounds(353, 464, 116, 40);
-		Register.add(btn_Clear);
-		
-		//Back Button
-		JButton btn_Back = new JButton("");
-		btn_Back.setIcon(new ImageIcon("/Users/luiz/Downloads/BACK (2).png"));
-		btn_Back.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				Applicant_Log AppplicantLog = new Applicant_Log(null, null);
-				AppplicantLog.ApplicantLog.setVisible(true);
-				dispose();
-				
-			}
-		});
-		btn_Back.setBounds(441, 558, 139, 40);
-		Register.add(btn_Back);
-		
-
-		
-		//BACKGROUND ====================================================================================
-
-		JLabel lbl_Background = new JLabel("");
-		lbl_Background.setIcon(new ImageIcon("/Users/luiz/Downloads/APPLICANT REGISTRATION2.png"));
-		lbl_Background.setBounds(0, 0, 1026, 617);
-		Register.add(lbl_Background);
-					
+		JLabel ExecutiveDash_BG = new JLabel("");
+		ExecutiveDash_BG.setIcon(new ImageIcon("/Users/luiz/Downloads/EXECUTIVE DASH (1).png"));
+		ExecutiveDash_BG.setBounds(0, 0, 1026, 617);
+		ExecutiveDash.getContentPane().add(ExecutiveDash_BG);
 		
 	}
 }
