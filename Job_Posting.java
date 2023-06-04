@@ -38,7 +38,7 @@ public class Job_Posting {
 	private JTable App_table;
 
     
-    private static final String FILE_PATH = "/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt";
+    private static String FILE_PATH = "/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt";
 
 	/**
 	 * Launch the application.
@@ -63,7 +63,7 @@ public class Job_Posting {
 	//Loads saved data from txt file to Jtable
     protected void loadDataFromFile() {
         try {
-            File file = new File("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt");
+            File file = new File(FILE_PATH);
             if (file.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
@@ -85,7 +85,7 @@ public class Job_Posting {
     //Saving data from Jtable to txt file
     private void saveDataToFile() {
         try {
-            File file = new File("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt");
+            File file = new File(FILE_PATH);
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             for (int i = 0; i < model.getRowCount(); i++) {
                 for (int j = 0; j < model.getColumnCount(); j++) {
@@ -395,5 +395,5 @@ public class Job_Posting {
 		JobPosting.getContentPane().add(lblJobPosting_BG);
 					
 
-  }
+	}
 }
