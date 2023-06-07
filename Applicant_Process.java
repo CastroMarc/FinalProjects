@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.CardLayout;
+import java.awt.Color;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -29,23 +31,24 @@ import javax.swing.table.TableRowSorter;
 public class Applicant_Process {
 
 	public JFrame ApplicantProcess;
-	public JPanel panel1;
+	public JLayeredPane layeredPane;
 	public JPanel panel2;
 	public JPanel panel3;
-	public JLayeredPane layeredPane;
-	private JTable App_table;
+	
+	//View available positions
     private DefaultTableModel model;
+	private JTable App_table;
     private DefaultTableModel model2;
 
     
-    //
+    //Apply to a position
     private JTextField searchField;
     private TableRowSorter<DefaultTableModel> sorter;
     protected Executive_Dash ExecutiveDash;
-    
-    //
-    private static final String FILE_PATH = "/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt";
     private JTable table;
+
+    
+    private static final String FILE_PATH = "/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt";
   
 	/**
 	 * Launch the application.
@@ -83,7 +86,7 @@ public class Applicant_Process {
         }
     }
     
-    //Loads data for Search 
+    //Loads data for Search table
     private void loadDataFromFile2() {
         try {
             File file = new File(FILE_PATH);
@@ -143,9 +146,10 @@ public class Applicant_Process {
 	 */
 	public Applicant_Process() {
 		initialize();
+		//View Postitions
         loadDataFromFile();
         
-        //NEW
+        //Apply
         loadDataFromFile2();
         getDataFromModel();
         ExecutiveDash = new Executive_Dash();
@@ -172,73 +176,94 @@ public class Applicant_Process {
 		ApplicantProcess.getContentPane().add(layeredPane);
 		layeredPane.setLayout(new CardLayout(0, 0));
 		
-        model = new DefaultTableModel();
 		
 		//PANEL 1 ====================================================================================
+				
+		JPanel panel1 = new JPanel();
+		layeredPane.add(panel1, "name_105864026786417");
+		panel1.setLayout(null);
+		
+		//PANEL 2 ====================================================================================
 
 		//VIEW AVAILABLE POSITINS
-		panel1 = new JPanel();
-		layeredPane.add(panel1, "name_55815229348416");
-		panel1.setLayout(null);
+		panel2 = new JPanel();
+		layeredPane.add(panel2, "name_55815229348416");
+		panel2.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		
-		scrollPane.setBounds(45, 70, 726, 404);
-		panel1.add(scrollPane);
+		scrollPane.setBounds(34, 91, 738, 374);
+		panel2.add(scrollPane);
+		
+        model = new DefaultTableModel();
 		
 		//Available Positions table
 		App_table = new JTable();
 		App_table.setModel(model);
+		App_table.setShowGrid(true);
+		App_table.setShowHorizontalLines(true);
+		App_table.setGridColor(Color.black);
 		App_table.setEnabled(false);
 		App_table.setFocusable(false);
 		App_table.setRowSelectionAllowed(false);
 		App_table.getTableHeader().setReorderingAllowed(false);
 		App_table.getTableHeader().setResizingAllowed(false);
-	        Object[] column = { "Position Code", "Job Title", "Responsibilities", "Salary" };
+	        Object[] column = {"                 Position Code","                       Job Title", "                  Responsibilities", "                         Salary"};
 	        model.setColumnIdentifiers(column);
-	        final Object[] row = new Object[4];
+	        final Object[]row = new Object[4];
 	        model.setColumnIdentifiers(column);
 		scrollPane.setViewportView(App_table);
 		
+		//BACKGROUND	
+		JLabel Panel1_BG = new JLabel("");
+		Panel1_BG.setIcon(new ImageIcon("/Users/luiz/Downloads/AVAILABE POSITIO .png"));
+		Panel1_BG.setBounds(0, 0, 798, 494);
+		panel2.add(Panel1_BG);
 		
-		//PANEL 2 ====================================================================================
+		
+		//PANEL 3 ====================================================================================
 
 		//APPLY TO DESIRED POSITION
-		panel2 = new JPanel();
-		layeredPane.add(panel2, "name_55815229348417");
-		panel2.setLayout(null);
+		panel3 = new JPanel();
+		layeredPane.add(panel3, "name_55815229348417");
+		panel3.setLayout(null);
 		
 		//Search Box
 		searchField = new JTextField();
-		searchField.setBounds(33, 65, 335, 46);
-		panel2.add(searchField);
+		searchField.setBounds(54, 103, 642, 46);
+		panel3.add(searchField);
 		searchField.setColumns(10);
 		
-		//SEARCH Button
-		JButton btn_Search = new JButton("Search");
+		//Search Button
+		JButton btn_Search = new JButton("");
+		btn_Search.setIcon(new ImageIcon("/Users/luiz/Downloads/Untitled design (5).png"));
 		btn_Search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-                String searchQuery = searchField.getText().trim();				
-                if (searchQuery.isEmpty()) {
-                    JOptionPane.showMessageDialog(ApplicantProcess, "Please enter a position code to search.", "Empty Search", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    applyRowFilter(searchQuery);
-                }
-	
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        String searchQuery = searchField.getText().trim();
+		        if (searchQuery.isEmpty()) {
+		            // Clear the row filter
+		            sorter.setRowFilter(null);
+		        } else {
+		            applyRowFilter(searchQuery);
+		        }
+		    }
 		});
-		btn_Search.setBounds(396, 75, 117, 29);
-		panel2.add(btn_Search);
+
+		btn_Search.setBounds(697, 103, 55, 46);
+		panel3.add(btn_Search);
 	    
+		
 		//Search Table
         JScrollPane scrollPane_1 = new JScrollPane();
-        scrollPane_1.setBounds(33, 138, 335, 154);
-        panel2.add(scrollPane_1);
+        scrollPane_1.setBounds(61, 181, 681, 177);
+        panel3.add(scrollPane_1);
         
         table = new JTable();
         scrollPane_1.setViewportView(table);
         model2 = new DefaultTableModel();
+        table.setShowGrid(false);
+        table.setShowHorizontalLines(true);
+        table.setGridColor(Color.black);
         table.setModel(model2);
         table.setEnabled(true);
         table.setFocusable(false);
@@ -253,8 +278,9 @@ public class Applicant_Process {
         table.setRowSorter(sorter);
 
 	        
-        //APPLY Button
-        JButton btn_Apply = new JButton("Apply");
+        //Apply Button
+        JButton btn_Apply = new JButton("");
+        btn_Apply.setIcon(new ImageIcon("/Users/luiz/Downloads/SUBMIT (1).png"));
         btn_Apply.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
@@ -267,24 +293,68 @@ public class Applicant_Process {
         		 ExecutiveDash.incrementApplicants(positionCode);
         		 ExecutiveDash.saveDataToFile();
         		     JOptionPane.showMessageDialog(ApplicantProcess, "You have successfully applied for position code: " + positionCode, "Application Submitted", JOptionPane.INFORMATION_MESSAGE);
+        		     Email_Format frame = new Email_Format();
+        		     frame.frame.setVisible(true);
+        		     ApplicantProcess.dispose();
         		 }
       
         	}
         });
-        btn_Apply.setBounds(138, 327, 117, 29);
-        panel2.add(btn_Apply);
+        btn_Apply.setBounds(347, 363, 121, 46);
+        panel3.add(btn_Apply);
         
-      
-		//PANEL 3 ====================================================================================
-
-		//VIEW APLIED POSITION
-		panel3 = new JPanel();
-		layeredPane.add(panel3, "name_55815229348418");
-		panel3.setLayout(null);
+        
+		//BACKGROUND	
+        JLabel Background = new JLabel("");
+        Background.setIcon(new ImageIcon("/Users/luiz/Downloads/AVAILABE POSITIO  (2).png"));
+        Background.setBounds(0, 0, 798, 494);
+        panel3.add(Background);
 		
-		JLabel lblNewLabel_2 = new JLabel("Panel3");
-		lblNewLabel_2.setBounds(391, 5, 41, 16);
-		panel3.add(lblNewLabel_2);
+		
+		//SWITCH PANEL BUTTONS ====================================================================================
+        
+		//HOME PAGE
+        JButton HomePage = new JButton("");
+        HomePage.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		
+				switchPanels(panel1);
+
+        	}
+        });
+        HomePage.setIcon(new ImageIcon("/Users/luiz/Downloads/BACKGROUND 2 BUTTON (2)/Home Page.png"));
+		HomePage.setBounds(21, 232, 189, 53);
+		ApplicantProcess.getContentPane().add(HomePage);
+		
+		//VIEW AVAILABLE POSITINS
+		JButton btnViewPositions = new JButton("");
+		btnViewPositions.setIcon(new ImageIcon("/Users/luiz/Downloads/BACKGROUND 2 BUTTON (2)/VAP.png"));
+		btnViewPositions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				switchPanels(panel2);
+				
+			}
+		});
+		btnViewPositions.setBounds(21, 335, 189, 53);
+		ApplicantProcess.getContentPane().add(btnViewPositions);
+		
+		
+		//APPLY TO DESIRED POSITION
+		JButton btnApply = new JButton("");
+		btnApply.setIcon(new ImageIcon("/Users/luiz/Downloads/BACKGROUND 2 BUTTON (2)/ADP.png"));
+		btnApply.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				switchPanels(panel3);
+				
+			}
+		});
+		btnApply.setBounds(21, 432, 189, 53);
+		ApplicantProcess.getContentPane().add(btnApply);
+		
+		//BUTTON ====================================================================================
+
 		
 		//LOGOUT BUTTON
 		JButton LOGOUTBUTTON = new JButton("");
@@ -301,57 +371,14 @@ public class Applicant_Process {
 		LOGOUTBUTTON.setBounds(880, 71, 116, 40);
 		ApplicantProcess.getContentPane().add(LOGOUTBUTTON);
 		
-
-		//BUTTONS ====================================================================================
-		
-		//VIEW AVAILABLE POSITINS
-		JButton btnViewPositions = new JButton("");
-		btnViewPositions.setIcon(new ImageIcon("/Users/luiz/Downloads/VAP.png"));
-		btnViewPositions.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				switchPanels(panel1);
-				
-			}
-		});
-		btnViewPositions.setBounds(21, 226, 189, 53);
-		ApplicantProcess.getContentPane().add(btnViewPositions);
-		
-		
-		//APPLY TO DESIRED POSITION
-		JButton btnApply = new JButton("");
-		btnApply.setIcon(new ImageIcon("/Users/luiz/Downloads/ADP.png"));
-		btnApply.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				switchPanels(panel2);
-				
-			}
-		});
-		btnApply.setBounds(21, 328, 189, 53);
-		ApplicantProcess.getContentPane().add(btnApply);
-		
-		
-		//VIEW APLIED POSITION
-		JButton btnViewApplied = new JButton("");
-		btnViewApplied.setIcon(new ImageIcon("/Users/luiz/Downloads/VAJP.png"));
-		btnViewApplied.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				switchPanels(panel3);
-				
-			}
-		});
-		btnViewApplied.setBounds(21, 427, 189, 53);
-		ApplicantProcess.getContentPane().add(btnViewApplied);
-		
 		
 		//BACKGROUND ====================================================================================
 
 		JLabel ApplicantProcess_BG = new JLabel("");
 		ApplicantProcess_BG.setIcon(new ImageIcon("/Users/luiz/Downloads/APPLICANT PROCESS (1).png"));
 		ApplicantProcess_BG.setBounds(0, 0, 1026, 617);
-		ApplicantProcess.getContentPane().add(ApplicantProcess_BG);		
+		ApplicantProcess.getContentPane().add(ApplicantProcess_BG);
+				
 		
 	}
 }
