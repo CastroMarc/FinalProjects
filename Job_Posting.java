@@ -33,9 +33,9 @@ public class Job_Posting {
 	private JTextField Salary;
 	private JTable table_1;
 	private JScrollPane scrollPane;
-	DefaultTableModel model;
     private JTable dash_table;
 	private JTable App_table;
+	DefaultTableModel model;
 
     
     private static String FILE_PATH = "/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt";
@@ -206,6 +206,9 @@ public class Job_Posting {
 		//TABLE ====================================================================================
 		
 		table_1 = new JTable();
+		table_1.setShowGrid(true);
+		table_1.setShowHorizontalLines(true);
+		table_1.setGridColor(Color.black);  
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -219,7 +222,7 @@ public class Job_Posting {
 			}
 		});
 		model = new DefaultTableModel();
-		Object[] column = {"Position Code","Job Title", "Responsibilities", "Salary"};
+		Object[] column = {"       Position Code","          Job Title", "    Responsibilities", "            Salary"};
 		final Object[] row = new Object[4];
 		model.setColumnIdentifiers(column);
 		table_1.setModel(model);
