@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javax.swing.JPanel;
@@ -49,6 +48,7 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
     }
 
     // METHODS ====================================================================================
+    
 
     // Loads data from the txt file to available positions table
     public void loadDataFromFile() {
@@ -69,7 +69,7 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
         }
     }
     
- // Loads data from the txt file to Applicant Count 
+    // Loads data from the txt file to Applicant Count 
     public void loadDataFromFile2() {
         try {
             File file = new File("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/App_Count.txt");
@@ -119,8 +119,8 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
             int count = entry.getValue();
 
             JLabel label = new JLabel(positionCode + ": " + count + " applicants");
-            label.setFont(new Font("Arial", Font.PLAIN, 14));
-            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setFont(new Font("Arial", Font.PLAIN, 12));
+            //label.setHorizontalAlignment(SwingConstants.CENTER);
             label.setBounds(6, y, 382, 23);
             AppCount.add(label);
 
@@ -169,33 +169,38 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
         ExecutiveDash.setLocationRelativeTo(null);
         ExecutiveDash.getContentPane().setLayout(null);
 
-	// Added Positions
+	    // Added Positions
         model = new DefaultTableModel();
 	    
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(37, 197, 439, 386);
+        scrollPane.setBounds(37, 197, 484, 386);
         ExecutiveDash.getContentPane().add(scrollPane);
-
+        
         dash_table = new JTable();
         scrollPane.setViewportView(dash_table);
-        dash_table.setModel(model);
+        dash_table.setModel(model);       
+        dash_table.setShowGrid(true);
+        dash_table.setShowHorizontalLines(true);
+        dash_table.setGridColor(Color.black);   
         dash_table.setEnabled(false);
         dash_table.setFocusable(false);
         dash_table.setRowSelectionAllowed(false);
         dash_table.getTableHeader().setReorderingAllowed(false);
         dash_table.getTableHeader().setResizingAllowed(false);
-        Object[] column = { "Position Code", "Job Title", "Responsibilities", "Salary" };
+        dash_table.setFont(new Font("Arial", Font.PLAIN, 12));
+        Object[] column = {"       Position Code","          Job Title", "    Responsibilities", "            Salary"};
         model.setColumnIdentifiers(column);
         final Object[] row = new Object[4];
-        model.setColumnIdentifiers(column);
+        model.setColumnIdentifiers(column);      
         scrollPane.setViewportView(dash_table);
 
 	    
-	// Applicant Count
+	    // Applicant Count
         model2 = new DefaultTableModel();
 
-	AppCount = new JPanel();
-        AppCount.setBounds(572, 197, 394, 386);
+	    AppCount = new JPanel();
+        AppCount.setBounds(589, 197, 400, 386);
+        AppCount.setBackground(Color.WHITE);
         ExecutiveDash.getContentPane().add(AppCount);
         AppCount.setLayout(null);
         loadDataFromFile2();
@@ -216,7 +221,7 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
         btn_JobPosting.setBounds(754, 67, 116, 40);
         ExecutiveDash.getContentPane().add(btn_JobPosting);
 
-        // Log Out Button
+        //Log Out Button
         JButton btn_LogOut = new JButton("");
         btn_LogOut.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -236,5 +241,4 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
         ExecutiveDash_BG.setBounds(0, 0, 1026, 617);
         ExecutiveDash.getContentPane().add(ExecutiveDash_BG);
     }
-
 }
