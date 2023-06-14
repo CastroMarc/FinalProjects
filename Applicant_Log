@@ -23,6 +23,8 @@ public class Applicant_Log extends Accounts{
 	private JTextField ApplicantUser;
 	private JPasswordField ApplicantPassword;
 	
+	private ArrayList<Accounts> accountsList = new ArrayList<Accounts>();
+
 
 	/**
 	 * Launch the application.
@@ -45,6 +47,7 @@ public class Applicant_Log extends Accounts{
 	 * @return 
 	 */
 	
+	//Initializes an instance with the provided username and password parameters 
 	public Applicant_Log(String username, String password) {
 		super(username,password);
 		initialize();
@@ -71,6 +74,7 @@ public class Applicant_Log extends Accounts{
 		
 		//Show and Hide Password
 		JCheckBox showHidePass = new JCheckBox("Show Password");
+		showHidePass.setBounds(236, 370, 114, 23);
 		showHidePass.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -86,7 +90,6 @@ public class Applicant_Log extends Accounts{
 			}
 		});
 		showHidePass.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		showHidePass.setBounds(236, 370, 114, 23);
 		ApplicantLog.getContentPane().add(showHidePass);
 		
 		//Applicant Password
@@ -97,14 +100,15 @@ public class Applicant_Log extends Accounts{
 		
 		//BUTTONS ====================================================================================
 
+		//Login Button
 		JButton btn_ApplicantLog = new JButton("");
+		btn_ApplicantLog.setBounds(225, 455, 139, 40);
 		btn_ApplicantLog.setIcon(new ImageIcon("/Users/luiz/Downloads/LOGIN.png"));
 		btn_ApplicantLog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String UsernameInput = ApplicantUser.getText();
 				String PasswordInput = ApplicantPassword.getText();
 				
-				ArrayList<Accounts> accountsList = new ArrayList<Accounts>();
 				
 			    try {
 			      FileReader fileReader = new FileReader("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Registered_Accounts.txt");
@@ -178,12 +182,12 @@ public class Applicant_Log extends Accounts{
 			    }
 			}
 		});
-		btn_ApplicantLog.setBounds(225, 455, 139, 40);
 		ApplicantLog.getContentPane().add(btn_ApplicantLog);
 	
 		
-		//BACK BUTTON
+		//Back Button
 		JButton BackButton = new JButton("");
+		BackButton.setBounds(73, 455, 139, 40);
 		BackButton.setIcon(new ImageIcon("/Users/luiz/Downloads/BACK (2).png"));
 		BackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -193,11 +197,11 @@ public class Applicant_Log extends Accounts{
 				ApplicantLog.dispose();
 			}
 		});
-		BackButton.setBounds(73, 455, 139, 40);
 		ApplicantLog.getContentPane().add(BackButton);
 		
-		//REGISTRATION BUTTON
+		//Register Button
 		JButton btn_ApplicantReg = new JButton("REGISTER");
+		btn_ApplicantReg.setBounds(161, 582, 94, 29);
 		btn_ApplicantReg.setBackground(Color.LIGHT_GRAY);
 		btn_ApplicantReg.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 		btn_ApplicantReg.addActionListener(new ActionListener() {
@@ -209,15 +213,14 @@ public class Applicant_Log extends Accounts{
 				
 			}
 		});
-		btn_ApplicantReg.setBounds(161, 582, 94, 29);
 		ApplicantLog.getContentPane().add(btn_ApplicantReg);
 		
 		
 		//BACKGROUND ====================================================================================
 
 		JLabel ApplicantPass = new JLabel("New label");
-		ApplicantPass.setIcon(new ImageIcon("/Users/luiz/Downloads/APPLICANT LOGIN (1).png"));
 		ApplicantPass.setBounds(0, 0, 1026, 617);
+		ApplicantPass.setIcon(new ImageIcon("/Users/luiz/Downloads/APPLICANT LOGIN (1).png"));
 		ApplicantLog.getContentPane().add(ApplicantPass);
 			
 
