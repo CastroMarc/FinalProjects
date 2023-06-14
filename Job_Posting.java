@@ -61,7 +61,7 @@ public class Job_Posting {
 	//METHODS ====================================================================================
 
 	//Loads saved data from txt file to Jtable
-    protected void loadDataFromFile() {
+    public void loadDataFromFile() {
         try {
             File file = new File(FILE_PATH);
             if (file.exists()) {
@@ -83,7 +83,7 @@ public class Job_Posting {
     }
     
     //Saving data from Jtable to txt file
-    private void saveDataToFile() {
+    public void saveDataToFile() {
         try {
             File file = new File(FILE_PATH);
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -229,25 +229,7 @@ public class Job_Posting {
 		scrollPane.setViewportView(table_1);
 		
 		//BUTTONS ====================================================================================
-				
-		//RETURN BUTTON
-		JButton btn_Return = new JButton("");
-		btn_Return.setBounds(881, 70, 119, 42);
-		btn_Return.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				Executive_Dash ExecutiveDash = new Executive_Dash();
-				ExecutiveDash.ExecutiveDash.setVisible(true);
-				JobPosting.dispose();
-				
-				 // Save data to file
-                saveDataToFile();
-                			
-			}
-		});
-		btn_Return.setIcon(new ImageIcon("/Users/luiz/Downloads/RETURN.png"));
-		JobPosting.getContentPane().add(btn_Return);
-		
+						
         // Load data from file
         loadDataFromFile();
 		
@@ -314,7 +296,7 @@ public class Job_Posting {
 						Responsibilities.setText("");
 						Salary.setText("");
 						
-					    // Update (dash_table)
+					    
                         DefaultTableModel otherModel = (DefaultTableModel) dash_table.getModel();
                         otherModel.setValueAt(PosCode.getText(), i, 0);
                         otherModel.setValueAt(JobTitle.getText(), i, 1);
@@ -388,6 +370,24 @@ public class Job_Posting {
 			}
 		});
 		JobPosting.getContentPane().add(Clear);
+		
+		//RETURN BUTTON
+		JButton btn_Return = new JButton("");
+		btn_Return.setBounds(881, 70, 119, 42);
+		btn_Return.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Executive_Dash ExecutiveDash = new Executive_Dash();
+				ExecutiveDash.ExecutiveDash.setVisible(true);
+				JobPosting.dispose();
+				
+				 // Save data to file
+                saveDataToFile();
+                			
+			}
+		});
+		btn_Return.setIcon(new ImageIcon("/Users/luiz/Downloads/RETURN.png"));
+		JobPosting.getContentPane().add(btn_Return);
 		
 	
 		//BACKGROUND====================================================================================
