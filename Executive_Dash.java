@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import java.io.File;
@@ -23,13 +22,20 @@ import javax.swing.JPanel;
 
 public class Executive_Dash {
 
-private Map<String, Integer> applicantCounts = new HashMap<>();
-
     public JFrame ExecutiveDash;
-    private JTable dash_table;
+    
+    //Added Positions
     private DefaultTableModel model;
+    private JTable dash_table;
+    
+    //Applicant Count
     private DefaultTableModel model2;
     private JPanel AppCount;
+    
+    private Map<String, Integer> applicantCounts = new HashMap<String, Integer>();
+    private static final String FILE_PATH = "/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt";
+    private static final String FILE_PATH2 = "/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/App_Count.txt";
+
 
     /**
      * Launch the application.
@@ -50,10 +56,10 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
     // METHODS ====================================================================================
     
 
-    // Loads data from the txt file to available positions table
+    //Loads data from the txt file to available positions table
     public void loadDataFromFile() {
         try {
-            File file = new File("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/Job Posting.txt");
+            File file = new File(FILE_PATH);
             if (file.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
@@ -69,10 +75,10 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
         }
     }
     
-    // Loads data from the txt file to Applicant Count 
+    //Loads data from the txt file to Applicant Count 
     public void loadDataFromFile2() {
         try {
-            File file = new File("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/App_Count.txt");
+            File file = new File(FILE_PATH2);
             if (file.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
@@ -94,7 +100,7 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
      //Saves applicant count per positions in a txt file
      public void saveDataToFile() {
         try {
-            FileWriter fw = new FileWriter("/Users/luiz/Library/Mobile Documents/com~apple~TextEdit/Documents/App_Count.txt");
+            FileWriter fw = new FileWriter(FILE_PATH2);
             fw.write(""); // Clear file content
 
             for (Map.Entry<String, Integer> entry : applicantCounts.entrySet()) {
@@ -118,9 +124,8 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
             String positionCode = entry.getKey();
             int count = entry.getValue();
 
-            JLabel label = new JLabel(positionCode + ": " + count + " applicants");
+            JLabel label = new JLabel(positionCode + ": " + count + " applicant/s");
             label.setFont(new Font("Arial", Font.PLAIN, 12));
-            //label.setHorizontalAlignment(SwingConstants.CENTER);
             label.setBounds(6, y, 382, 23);
             AppCount.add(label);
 
@@ -169,6 +174,9 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
         ExecutiveDash.setLocationRelativeTo(null);
         ExecutiveDash.getContentPane().setLayout(null);
 
+        
+        // Tables ====================================================================================
+
 	    // Added Positions
         model = new DefaultTableModel();
 	    
@@ -195,7 +203,7 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
         scrollPane.setViewportView(dash_table);
 
 	    
-	    // Applicant Count
+	    // Applicant Count 
         model2 = new DefaultTableModel();
 
 	    AppCount = new JPanel();
@@ -207,7 +215,7 @@ private Map<String, Integer> applicantCounts = new HashMap<>();
 
         // BUTTONS ====================================================================================
 
-        // Job Posting Button
+        //Job Posting Button
         JButton btn_JobPosting = new JButton("");
         btn_JobPosting.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
