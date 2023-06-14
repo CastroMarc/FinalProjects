@@ -32,6 +32,7 @@ public class Applicant_Process {
 
 	public JFrame ApplicantProcess;
 	public JLayeredPane layeredPane;
+	public JPanel panel1;
 	public JPanel panel2;
 	public JPanel panel3;
 	
@@ -69,7 +70,7 @@ public class Applicant_Process {
 	//METHODS ====================================================================================
 
 	//Loads Data from txt file to Available Positions Table
-    private void loadDataFromFile() {
+    public void loadDataFromFile() {
         try {
             File file = new File(FILE_PATH);
             if (file.exists()) {
@@ -87,7 +88,7 @@ public class Applicant_Process {
     }
     
     //Loads data for Search table
-    private void loadDataFromFile2() {
+    public void loadDataFromFile2() {
         try {
             File file = new File(FILE_PATH);
             if (file.exists()) {
@@ -105,7 +106,8 @@ public class Applicant_Process {
             e.printStackTrace();
         }
     }
-
+    
+    //Retrieves the data from the model and returns it as a list of string arrays
     private List<String[]> getDataFromModel() {
         List<String[]> data = new ArrayList<>();
         for (int i = 0; i < model2.getRowCount(); i++) {
@@ -117,8 +119,9 @@ public class Applicant_Process {
         }
         return data;
     }
-
     
+    
+    //Row filter for search box
     private void applyRowFilter(String searchQuery) {
         RowFilter<DefaultTableModel, Object> rf = null;
         try {
@@ -146,6 +149,7 @@ public class Applicant_Process {
 	 */
 	public Applicant_Process() {
 		initialize();
+		
 		//View Postitions
         loadDataFromFile();
         
@@ -169,8 +173,6 @@ public class Applicant_Process {
 		ApplicantProcess.setLocationRelativeTo(null);
 		ApplicantProcess.getContentPane().setLayout(null);
 		
-		//PANELS ====================================================================================
-
 		layeredPane = new JLayeredPane();
 		layeredPane.setBounds(222, 123, 798, 494);
 		ApplicantProcess.getContentPane().add(layeredPane);
@@ -178,10 +180,16 @@ public class Applicant_Process {
 		
 		
 		//PANEL 1 ====================================================================================
-				
-		JPanel panel1 = new JPanel();
+		
+		//HOME PAGE
+		panel1 = new JPanel();
 		layeredPane.add(panel1, "name_105864026786417");
 		panel1.setLayout(null);
+		
+		JLabel Panel1BG = new JLabel("");
+		Panel1BG.setIcon(new ImageIcon("/Users/luiz/Downloads/AVAILABE POSITIO  (3).png"));
+		Panel1BG.setBounds(0, 0, 798, 494);
+		panel1.add(Panel1BG);
 		
 		//PANEL 2 ====================================================================================
 
@@ -190,8 +198,7 @@ public class Applicant_Process {
 		layeredPane.add(panel2, "name_55815229348416");
 		panel2.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		
+		JScrollPane scrollPane = new JScrollPane();	
 		scrollPane.setBounds(34, 91, 738, 374);
 		panel2.add(scrollPane);
 		
@@ -304,7 +311,7 @@ public class Applicant_Process {
         panel3.add(btn_Apply);
         
         
-		//BACKGROUND	
+		//Background	
         JLabel Background = new JLabel("");
         Background.setIcon(new ImageIcon("/Users/luiz/Downloads/AVAILABE POSITIO  (2).png"));
         Background.setBounds(0, 0, 798, 494);
@@ -354,9 +361,8 @@ public class Applicant_Process {
 		ApplicantProcess.getContentPane().add(btnApply);
 		
 		//BUTTON ====================================================================================
-
 		
-		//LOGOUT BUTTON
+		//Log out Button
 		JButton LOGOUTBUTTON = new JButton("");
 		LOGOUTBUTTON.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
